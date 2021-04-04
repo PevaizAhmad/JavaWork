@@ -63,7 +63,11 @@ public class TableModel extends JTableModel  {
                 int id=Integer.parseInt($data);
                 String name=rs.getString("city_name");
                 cityList.add(new City(id,name));
+               
             }
+            rs.close();
+            stmnt.close();
+            con.close();
         }
         catch(Exception ex)
         {

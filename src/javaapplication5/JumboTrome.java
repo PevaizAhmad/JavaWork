@@ -16,7 +16,8 @@ import java.sql.Statement;
  */
 public class JumboTrome extends javax.swing.JFrame {
 
-     TableModel tmodel = new TableModel();
+    TableModel tmodel = new TableModel();
+
     /**
      * Creates new form JumboTrome
      */
@@ -36,6 +37,8 @@ public class JumboTrome extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable = new javax.swing.JTable();
         mybtn = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        city_list = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,6 +62,12 @@ public class JumboTrome extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Select City");
+
+        city_list.setEditable(true);
+        city_list.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "City List" }));
+        city_list.setToolTipText("");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -67,29 +76,58 @@ public class JumboTrome extends javax.swing.JFrame {
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(mybtn)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(139, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(city_list, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(68, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(city_list, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
                 .addComponent(mybtn)
-                .addContainerGap(125, Short.MAX_VALUE))
+                .addContainerGap(227, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-   
+
+
     private void mybtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mybtnActionPerformed
         // TODO add your handling code here:
-            tmodel.populateTable();
-                jTable.setModel(tmodel);
-        
-        
+        tmodel.populateTable();
+        jTable.setModel(tmodel);
+        try {
+            Connection con;
+            String URL = "jdbc:postgresql://127.0.0.1:5432/new_db";
+            String userName = "postgres";
+            String password = "ahmad1213";
+            con = DriverManager.getConnection(URL, userName, password);
+
+            String qry = "SELECT * FROM city.\"CITIES\" ";
+            Statement stmnt;
+            stmnt = (Statement) con.createStatement();
+            ResultSet rs = stmnt.executeQuery(qry);
+
+            while (rs.next()) {
+                city_list.addItem(rs.getString("city_name"));
+            }
+            rs.close();
+            stmnt.close();
+            con.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+
     }//GEN-LAST:event_mybtnActionPerformed
 
     /**
@@ -128,6 +166,8 @@ public class JumboTrome extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> city_list;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;
     private javax.swing.JButton mybtn;
